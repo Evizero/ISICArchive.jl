@@ -7,9 +7,11 @@ using SimpleStructs
 export
 
     DatasetList,
-    Dataset
+    Dataset,
+    ImageList
 
 include("common.jl")
 include("dataset.jl")
+include("image.jl")
 
 end # module

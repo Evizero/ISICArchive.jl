@@ -1,14 +1,14 @@
-type DatasetListEntry
+type ListEntry
     id::ASCIIString
     name::ASCIIString
     updated::DateTime
 end
 
-function DatasetListEntry(o::Dict)
-    DatasetListEntry(o["_id"], o["name"], parse_datetime(o["updated"]))
+function ListEntry(o::Dict)
+    ListEntry(o["_id"], o["name"], parse_datetime(o["updated"]))
 end
 
-function Base.show(io::IO, o::DatasetListEntry)
+function Base.show(io::IO, o::ListEntry)
     print_with_color(:blue, io, o.name)
     print(io, ": id = $(o.id), updated = $(o.updated)")
 end
@@ -24,7 +24,7 @@ end
 
 function Base.get(req::DatasetList)
     query = "https://isic-archive.com:443/api/v1/dataset?limit=$(req.limit)&offset=$(req.offset)&sort=$(req.sort)&sortdir=$(req.sortdir)"
-    [DatasetListEntry(o) for o in clean_json(get(query))]
+    [ListEntry(o) for o in clean_json(get(query))]
 end
 
 # ==========================================================================
@@ -71,7 +71,7 @@ end
     id::ASCIIString
 )
 
-Dataset(le::DatasetListEntry) = Dataset(id = le.id)
+Dataset(le::ListEntry) = Dataset(id = le.id)
 
 function Base.get(req::Dataset)
     query = "https://isic-archive.com:443/api/v1/dataset/$(req.id)"
