@@ -15,6 +15,8 @@ using ISICArchive
 
 ## Getting Started
 
+The following [API calls](https://isic-archive.com/api/v1) are supported
+
 ### dataset
 
 #### /dataset
@@ -96,8 +98,44 @@ ISICArchive.ImageInfo
   .updated: 2015-11-06T15:08:47
   .class: benign
   .description:
-  
+
 ...
+```
+
+#### /image/{id}/thumbnail
+
+Download a thumbnail of an image
+
+```Julia
+# img = get(ImageThumbnail(id = "5592ac579fc3c13155a57a80"))
+# img = get(ImageThumbnail(img_info))
+img = get(ImageThumbnail(image_list[1]))
+```
+
+```
+RGB Images.Image with:
+  data: 255x170 Array{ColorTypes.RGB{FixedPointNumbers.UFixed{UInt8,8}},2}
+  properties:
+    colorspace: sRGB
+    spatialorder:  x y
+```
+
+#### /image/{id}/download
+
+Download the high-quality version of an image
+
+```Julia
+# img = get(ImageDownload(id = "5592ac579fc3c13155a57a80"))
+# img = get(ImageDownload(img_info))
+img = get(ImageDownload(image_list[1]))
+```
+
+```
+RGB Images.Image with:
+  data: 6668x4439 Array{ColorTypes.RGB{FixedPointNumbers.UFixed{UInt8,8}},2}
+  properties:
+    colorspace: sRGB
+    spatialorder:  x y
 ```
 
 ## License
