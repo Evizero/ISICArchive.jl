@@ -1,4 +1,3 @@
-
 @defstruct ImageList (
     (limit::Int = 50, limit > 0),
     (offset::Int = 0, offset >= 0),
@@ -24,7 +23,7 @@ type ImageInfo
     description::UTF8String
     name::ASCIIString
     updated::DateTime
-    metadata
+    meta
 end
 
 function ImageInfo(o::Dict)
@@ -35,10 +34,11 @@ function ImageInfo(o::Dict)
         o["creatorId"],
         o["description"],
         o["name"],
-        parse_datetime(o["updated"]))
+        parse_datetime(o["updated"]),
+        o["meta"])
 end
 
-function Base.show(io::IO, o::DatasetInfo)
+function Base.show(io::IO, o::ImageInfo)
     print_with_color(:white, io, string(typeof(o)), "\n")
     print(io,   "  .name: ")
     print_with_color(:blue, io, o.name, "\n")
@@ -47,6 +47,47 @@ function Base.show(io::IO, o::DatasetInfo)
     println(io, "  .creatorId: ", o.creatorId)
     println(io, "  .created: ", o.created)
     println(io, "  .updated: ", o.updated)
+    println(io, "  .description: ", o.description)
     println(io, "")
-    print(io, o.description)
+    print(io,   "  .meta: parsed JSON as ")
+    Base.showdict(io, o.meta)
+end
+
+# ==========================================================================
+
+@defstruct ImageMetadata (
+    id::ASCIIString
+)
+
+ImageMetadata(le::Union{ListEntry,ImageInfo}) = ImageMetadata(id = le.id)
+
+function Base.get(req::ImageMetadata)
+    query = "https://isic-archive.com:443/api/v1/image/$(req.id)"
+    ImageInfo(clean_json(get(query)))
+end
+
+# ==========================================================================
+
+@defstruct ImageDownload (
+    id::ASCIIString
+)
+
+ImageDownload(le::Union{ListEntry,ImageInfo}) = ImageDownload(id = le.id)
+
+function Base.get(req::ImageDownload)
+    query = "https://isic-archive.com:443/api/v1/image/$(req.id)/download"
+    ImageMagick.readblob(readbytes(get(query)))
+end
+
+# ==========================================================================
+
+@defstruct ImageThumbnail (
+    id::ASCIIString
+)
+
+ImageThumbnail(le::Union{ListEntry,ImageInfo}) = ImageThumbnail(id = le.id)
+
+function Base.get(req::ImageThumbnail)
+    query = "https://isic-archive.com:443/api/v1/image/$(req.id)/thumbnail"
+    ImageMagick.readblob(readbytes(get(query)))
 end

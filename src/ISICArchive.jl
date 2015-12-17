@@ -1,14 +1,20 @@
 module ISICArchive
 
-using Requests
+import Requests: get
 using JSON
 using SimpleStructs
+using Images
+using ImageMagick
 
 export
 
     DatasetList,
     Dataset,
-    ImageList
+
+    ImageList,
+    ImageMetadata,
+    ImageDownload,
+    ImageThumbnail
 
 include("common.jl")
 include("dataset.jl")
