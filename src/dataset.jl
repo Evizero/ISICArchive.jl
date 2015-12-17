@@ -15,21 +15,21 @@ end
 
 # ==========================================================================
 
-@defstruct DatasetList (
+@defstruct DatasetListRequest (
     (limit::Int = 50, limit > 0),
     (offset::Int = 0, offset >= 0),
     sort::Symbol = :lowerName,
     (sortdir::Int = 1, sortdir == 1 || sortdir == -1)
 )
 
-function Base.get(req::DatasetList)
+function Base.get(req::DatasetListRequest)
     query = "https://isic-archive.com:443/api/v1/dataset?limit=$(req.limit)&offset=$(req.offset)&sort=$(req.sort)&sortdir=$(req.sortdir)"
     [ListEntry(o) for o in clean_json(get(query))]
 end
 
 # ==========================================================================
 
-type DatasetInfo
+type DatasetMetadata
     accessLevel::Int
     id::ASCIIString
     modelType::ASCIIString
@@ -40,8 +40,8 @@ type DatasetInfo
     updated::DateTime
 end
 
-function DatasetInfo(o::Dict)
-    DatasetInfo(
+function DatasetMetadata(o::Dict)
+    DatasetMetadata(
         o["_accessLevel"],
         o["_id"],
         o["_modelType"],
@@ -52,7 +52,7 @@ function DatasetInfo(o::Dict)
         parse_datetime(o["updated"]))
 end
 
-function Base.show(io::IO, o::DatasetInfo)
+function Base.show(io::IO, o::DatasetMetadata)
     print_with_color(:white, io, string(typeof(o)), "\n")
     print(io,   "  .name: ")
     print_with_color(:blue, io, o.name, "\n")
@@ -67,13 +67,13 @@ end
 
 # ==========================================================================
 
-@defstruct Dataset (
+@defstruct DatasetMetadataRequest (
     id::ASCIIString
 )
 
-Dataset(le::ListEntry) = Dataset(id = le.id)
+DatasetMetadataRequest(le::ListEntry) = DatasetMetadataRequest(id = le.id)
 
-function Base.get(req::Dataset)
+function Base.get(req::DatasetMetadataRequest)
     query = "https://isic-archive.com:443/api/v1/dataset/$(req.id)"
-    DatasetInfo(clean_json(get(query)))
+    DatasetMetadata(clean_json(get(query)))
 end

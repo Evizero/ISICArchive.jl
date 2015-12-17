@@ -8,13 +8,13 @@ using ImageMagick
 
 export
 
-    DatasetList,
-    Dataset,
+    DatasetListRequest,
+    DatasetMetadataRequest,
 
-    ImageList,
-    ImageMetadata,
-    ImageDownload,
-    ImageThumbnail
+    ImageListRequest,
+    ImageMetadataRequest,
+    ImageDownloadRequest,
+    ImageThumbnailRequest
 
 include("common.jl")
 include("dataset.jl")

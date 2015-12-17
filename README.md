@@ -24,7 +24,7 @@ The following [API calls](https://isic-archive.com/api/v1) are supported
 List of available lesion datasets.
 
 ```Julia
-dataset_list = get(DatasetList(limit = 5))
+dataset_list = get(DatasetListRequest(limit = 5))
 ```
 
 ```
@@ -41,12 +41,12 @@ dataset_list = get(DatasetList(limit = 5))
 Details of a lesion image dataset.
 
 ```Julia
-# info = get(Dataset(id = "5627f42b9fc3c132be08d84f"))
-info = get(Dataset(dataset_list[1]))
+# info = get(DatasetMetadataRequest(id = "5627f42b9fc3c132be08d84f"))
+info = get(DatasetMetadataRequest(dataset_list[1]))
 ```
 
 ```
-ISICArchive.DatasetInfo
+ISICArchive.DatasetMetadata
   .name: ISIC_MSK-1_1
   .id: 5627f42b9fc3c132be08d84f
   .modelType: folder
@@ -65,9 +65,9 @@ Biopsy-confirmed melanocytic lesions, both malignant and benign.
 List of available images in a lesion datasets.
 
 ```Julia
-# image_list = get(ImageList(datasetId = "5627f42b9fc3c132be08d84f", limit = 5))
-# image_list = get(ImageList(info, limit = 5))
-image_list = get(ImageList(dataset_list[1], limit = 5))
+# image_list = get(ImageListRequest(datasetId = "5627f42b9fc3c132be08d84f", limit = 5))
+# image_list = get(ImageListRequest(info, limit = 5))
+image_list = get(ImageListRequest(dataset_list[1], limit = 5))
 ```
 
 ```
@@ -84,12 +84,12 @@ image_list = get(ImageList(dataset_list[1], limit = 5))
 Details of an image.
 
 ```Julia
-# img_info = get(ImageMetadata(id = "5592ac579fc3c13155a57a80"))
-img_info = get(ImageMetadata(image_list[1]))
+# img_info = get(ImageMetadataRequest(id = "5592ac579fc3c13155a57a80"))
+img_info = get(ImageMetadataRequest(image_list[1]))
 ```
 
 ```
-ISICArchive.ImageInfo
+ISICArchive.ImageMetadata
   .name: ISIC_0011408
   .id: 5592ac579fc3c13155a57a80
   .modelType: item
@@ -107,9 +107,9 @@ ISICArchive.ImageInfo
 Download a thumbnail of an image
 
 ```Julia
-# img = get(ImageThumbnail(id = "5592ac579fc3c13155a57a80"))
-# img = get(ImageThumbnail(img_info))
-img = get(ImageThumbnail(image_list[1]))
+# img = get(ImageThumbnailRequest(id = "5592ac579fc3c13155a57a80"))
+# img = get(ImageThumbnailRequest(img_info))
+img = get(ImageThumbnailRequest(image_list[1]))
 ```
 
 ```
@@ -125,9 +125,9 @@ RGB Images.Image with:
 Download the high-quality version of an image
 
 ```Julia
-# img = get(ImageDownload(id = "5592ac579fc3c13155a57a80"))
-# img = get(ImageDownload(img_info))
-img = get(ImageDownload(image_list[1]))
+# img = get(ImageDownloadRequest(id = "5592ac579fc3c13155a57a80"))
+# img = get(ImageDownloadRequest(img_info))
+img = get(ImageDownloadRequest(image_list[1]))
 ```
 
 ```

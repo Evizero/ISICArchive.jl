@@ -1,4 +1,4 @@
-@defstruct ImageList (
+@defstruct ImageListRequest (
     (limit::Int = 50, limit > 0),
     (offset::Int = 0, offset >= 0),
     sort::Symbol = :lowerName,
@@ -6,16 +6,16 @@
     datasetId::ASCIIString
 )
 
-ImageList(ds::Union{ListEntry,DatasetInfo}; kw...) = ImageList(datasetId = ds.id; kw...)
+ImageListRequest(ds::Union{ListEntry,DatasetMetadata}; kw...) = ImageListRequest(datasetId = ds.id; kw...)
 
-function Base.get(req::ImageList)
+function Base.get(req::ImageListRequest)
     query = "https://isic-archive.com:443/api/v1/image?limit=$(req.limit)&offset=$(req.offset)&sort=$(req.sort)&sortdir=$(req.sortdir)&datasetId=$(req.datasetId)"
     [ListEntry(o) for o in clean_json(get(query))]
 end
 
 # ==========================================================================
 
-type ImageInfo
+type ImageMetadata
     id::ASCIIString
     modelType::ASCIIString
     created::DateTime
@@ -27,8 +27,8 @@ type ImageInfo
     meta
 end
 
-function ImageInfo(o::Dict)
-    ImageInfo(
+function ImageMetadata(o::Dict)
+    ImageMetadata(
         o["_id"],
         o["_modelType"],
         parse_datetime(o["created"]),
@@ -52,7 +52,7 @@ function extract_class(o::Dict)
     :none
 end
 
-function Base.show(io::IO, o::ImageInfo)
+function Base.show(io::IO, o::ImageMetadata)
     print_with_color(:white, io, string(typeof(o)), "\n")
     print(io,   "  .name: ")
     print_with_color(:blue, io, o.name, "\n")
@@ -70,39 +70,39 @@ end
 
 # ==========================================================================
 
-@defstruct ImageMetadata (
+@defstruct ImageMetadataRequest (
     id::ASCIIString
 )
 
-ImageMetadata(le::Union{ListEntry,ImageInfo}) = ImageMetadata(id = le.id)
+ImageMetadataRequest(le::Union{ListEntry,ImageMetadata}) = ImageMetadataRequest(id = le.id)
 
-function Base.get(req::ImageMetadata)
+function Base.get(req::ImageMetadataRequest)
     query = "https://isic-archive.com:443/api/v1/image/$(req.id)"
-    ImageInfo(clean_json(get(query)))
+    ImageMetadata(clean_json(get(query)))
 end
 
 # ==========================================================================
 
-@defstruct ImageDownload (
+@defstruct ImageDownloadRequest (
     id::ASCIIString
 )
 
-ImageDownload(le::Union{ListEntry,ImageInfo}) = ImageDownload(id = le.id)
+ImageDownloadRequest(le::Union{ListEntry,ImageMetadata}) = ImageDownloadRequest(id = le.id)
 
-function Base.get(req::ImageDownload)
+function Base.get(req::ImageDownloadRequest)
     query = "https://isic-archive.com:443/api/v1/image/$(req.id)/download"
     ImageMagick.readblob(readbytes(get(query)))
 end
 
 # ==========================================================================
 
-@defstruct ImageThumbnail (
+@defstruct ImageThumbnailRequest (
     id::ASCIIString
 )
 
-ImageThumbnail(le::Union{ListEntry,ImageInfo}) = ImageThumbnail(id = le.id)
+ImageThumbnailRequest(le::Union{ListEntry,ImageMetadata}) = ImageThumbnailRequest(id = le.id)
 
-function Base.get(req::ImageThumbnail)
+function Base.get(req::ImageThumbnailRequest)
     query = "https://isic-archive.com:443/api/v1/image/$(req.id)/thumbnail"
     ImageMagick.readblob(readbytes(get(query)))
 end
