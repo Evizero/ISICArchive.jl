@@ -4,13 +4,13 @@ type DatasetListEntry
     updated::DateTime
 end
 
-function DatasetListEntry(entry::Dict)
-    DatasetListEntry(entry["_id"], entry["name"], parse_datetime(entry["updated"]))
+function DatasetListEntry(o::Dict)
+    DatasetListEntry(o["_id"], o["name"], parse_datetime(o["updated"]))
 end
 
-function Base.show(io::IO, entry::DatasetListEntry)
-    print_with_color(:blue, io, entry.name)
-    print(io, ": id = $(entry.id), updated = $(entry.updated)")
+function Base.show(io::IO, o::DatasetListEntry)
+    print_with_color(:blue, io, o.name)
+    print(io, ": id = $(o.id), updated = $(o.updated)")
 end
 
 # ==========================================================================
@@ -24,7 +24,7 @@ end
 
 function Base.get(req::DatasetList)
     query = "https://isic-archive.com:443/api/v1/dataset?limit=$(req.limit)&offset=$(req.offset)&sort=$(req.sort)&sortdir=$(req.sortdir)"
-    [DatasetListEntry(entry) for entry in clean_json(get(query))]
+    [DatasetListEntry(o) for o in clean_json(get(query))]
 end
 
 # ==========================================================================
@@ -40,29 +40,29 @@ type DatasetInfo
     updated::DateTime
 end
 
-function DatasetInfo(entry::Dict)
+function DatasetInfo(o::Dict)
     DatasetInfo(
-        entry["_accessLevel"],
-        entry["_id"],
-        entry["_modelType"],
-        parse_datetime(entry["created"]),
-        entry["creatorId"],
-        entry["description"],
-        entry["name"],
-        parse_datetime(entry["updated"]))
+        o["_accessLevel"],
+        o["_id"],
+        o["_modelType"],
+        parse_datetime(o["created"]),
+        o["creatorId"],
+        o["description"],
+        o["name"],
+        parse_datetime(o["updated"]))
 end
 
-function Base.show(io::IO, entry::DatasetInfo)
-    print_with_color(:white, io, string(typeof(entry)), "\n")
+function Base.show(io::IO, o::DatasetInfo)
+    print_with_color(:white, io, string(typeof(o)), "\n")
     print(io,   "  .name: ")
-    print_with_color(:blue, io, entry.name, "\n")
-    println(io, "  .id: ", entry.id)
-    println(io, "  .modelType: ", entry.modelType)
-    println(io, "  .created: ", entry.created)
-    println(io, "  .creatorId: ", entry.creatorId)
-    println(io, "  .updated: ", entry.updated)
+    print_with_color(:blue, io, o.name, "\n")
+    println(io, "  .id: ", o.id)
+    println(io, "  .modelType: ", o.modelType)
+    println(io, "  .creatorId: ", o.creatorId)
+    println(io, "  .created: ", o.created)
+    println(io, "  .updated: ", o.updated)
     println(io, "")
-    print(io, entry.description)
+    print(io, o.description)
 end
 
 # ==========================================================================
