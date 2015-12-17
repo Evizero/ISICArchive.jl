@@ -19,7 +19,7 @@ using ISICArchive
 
 #### /dataset
 
-Query the list of available lesion datasets.
+List of available lesion datasets.
 
 ```Julia
 dataset_list = get(DatasetList(limit = 5))
@@ -34,9 +34,9 @@ dataset_list = get(DatasetList(limit = 5))
  ISIC_UDA-2_1: id = 54ea816fbae47871b5e00c80, updated = 2015-03-06T14:54:30
 ```
 
-#### /dataset
+#### /dataset/{id}
 
-Query the details of a lesion image dataset.
+Details of a lesion image dataset.
 
 ```Julia
 # info = get(Dataset(id = "5627f42b9fc3c132be08d84f"))
@@ -54,6 +54,50 @@ ISICArchive.DatasetInfo
 
 Moles and melanomas.
 Biopsy-confirmed melanocytic lesions, both malignant and benign.
+```
+
+### image
+
+#### /image
+
+List of available images in a lesion datasets.
+
+```Julia
+# image_list = get(ImageList(datasetId = "5627f42b9fc3c132be08d84f", limit = 5))
+# image_list = get(ImageList(info, limit = 5))
+image_list = get(ImageList(dataset_list[1], limit = 5))
+```
+
+```
+5-element Array{ISICArchive.ListEntry,1}:
+ ISIC_0011408: id = 5592ac579fc3c13155a57a80, updated = 2015-11-06T15:08:47
+ ISIC_0011409: id = 5592ac599fc3c13155a57a85, updated = 2015-09-03T12:24:51
+ ISIC_0011420: id = 5592ac779fc3c13155a57abc, updated = 2015-09-03T12:31:02
+ ISIC_0011426: id = 5592ac899fc3c13155a57ada, updated = 2015-09-03T12:33:28
+ ISIC_0011427: id = 5592ac8c9fc3c13155a57adf, updated = 2015-08-28T13:45:31
+```
+
+#### /image/{id}
+
+Details of an image.
+
+```Julia
+# img_info = get(ImageMetadata(id = "5592ac579fc3c13155a57a80"))
+img_info = get(ImageMetadata(image_list[1]))
+```
+
+```
+ISICArchive.ImageInfo
+  .name: ISIC_0011408
+  .id: 5592ac579fc3c13155a57a80
+  .modelType: item
+  .creatorId: 54cb974fbae47819d8e4c727
+  .created: 2015-06-30T14:48:55
+  .updated: 2015-11-06T15:08:47
+  .class: benign
+  .description:
+  
+...
 ```
 
 ## License
