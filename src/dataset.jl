@@ -65,6 +65,9 @@ function JSON.json(o::DatasetMetadata)
     json(dict)
 end
 
+save(file, o::DatasetMetadata) = writeall(file, json(o))
+load_datasetmeta(file) = DatasetMetadata(JSON.parse(readall(file)))
+
 for op = (:<, :>, :(==), :(!=), :(<=), :(>=))
   @eval function Base.$op(d1::DatasetMetadata, d2::DatasetMetadata)
       Base.$op(d1.updated, d2.updated)

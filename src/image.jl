@@ -53,6 +53,9 @@ function JSON.json(o::ImageMetadata)
     json(dict)
 end
 
+save(file, o::ImageMetadata) = writeall(file, json(o))
+load_imagemeta(file) = ImageMetadata(JSON.parse(readall(file)))
+
 for op = (:<, :>, :(==), :(!=), :(<=), :(>=))
   @eval function Base.$op(i1::ImageMetadata, i2::ImageMetadata)
       Base.$op(i1.updated, i2.updated)
