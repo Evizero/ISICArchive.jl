@@ -23,6 +23,7 @@ type ImageInfo
     description::UTF8String
     name::ASCIIString
     updated::DateTime
+    class::Symbol
     meta
 end
 
@@ -35,7 +36,20 @@ function ImageInfo(o::Dict)
         o["description"],
         o["name"],
         parse_datetime(o["updated"]),
+        extract_class(o["meta"]),
         o["meta"])
+end
+
+function extract_class(o::Dict)
+    if haskey(o, "clinical")
+        c = o["clinical"]
+        if haskey(c, "benign_malignant")
+            return symbol(c["benign_malignant"])
+        elseif haskey(c, "ben_mal")
+            return symbol(c["ben_mal"])
+        end
+    end
+    :none
 end
 
 function Base.show(io::IO, o::ImageInfo)
@@ -47,6 +61,7 @@ function Base.show(io::IO, o::ImageInfo)
     println(io, "  .creatorId: ", o.creatorId)
     println(io, "  .created: ", o.created)
     println(io, "  .updated: ", o.updated)
+    println(io, "  .class: ", o.class)
     println(io, "  .description: ", o.description)
     println(io, "")
     print(io,   "  .meta: parsed JSON as ")
