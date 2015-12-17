@@ -52,6 +52,25 @@ function DatasetMetadata(o::Dict)
         parse_datetime(o["updated"]))
 end
 
+function JSON.json(o::DatasetMetadata)
+    dict = Dict{AbstractString, Any}()
+    dict["_accessLevel"] = o.accessLevel
+    dict["_id"] = o.id
+    dict["_modelType"] = o.modelType
+    dict["created"] = tostring(o.created)
+    dict["creatorId"] = o.creatorId
+    dict["description"] = o.description
+    dict["name"] = o.name
+    dict["updated"] = tostring(o.updated)
+    json(dict)
+end
+
+for op = (:<, :>, :(==), :(!=), :(<=), :(>=))
+  @eval function Base.$op(d1::DatasetMetadata, d2::DatasetMetadata)
+      Base.$op(d1.updated, d2.updated)
+  end
+end
+
 function Base.show(io::IO, o::DatasetMetadata)
     print_with_color(:white, io, string(typeof(o)), "\n")
     print(io,   "  .name: ")

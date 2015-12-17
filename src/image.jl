@@ -24,7 +24,7 @@ type ImageMetadata
     name::ASCIIString
     updated::DateTime
     class::Symbol
-    meta
+    meta::Dict{AbstractString,Any}
 end
 
 function ImageMetadata(o::Dict)
@@ -38,6 +38,25 @@ function ImageMetadata(o::Dict)
         parse_datetime(o["updated"]),
         extract_class(o["meta"]),
         o["meta"])
+end
+
+function JSON.json(o::ImageMetadata)
+    dict = Dict{AbstractString, Any}()
+    dict["_id"] = o.id
+    dict["_modelType"] = o.modelType
+    dict["created"] = tostring(o.created)
+    dict["creatorId"] = o.creatorId
+    dict["description"] = o.description
+    dict["name"] = o.name
+    dict["updated"] = tostring(o.updated)
+    dict["meta"] = o.meta
+    json(dict)
+end
+
+for op = (:<, :>, :(==), :(!=), :(<=), :(>=))
+  @eval function Base.$op(i1::ImageMetadata, i2::ImageMetadata)
+      Base.$op(i1.updated, i2.updated)
+  end
 end
 
 function extract_class(o::Dict)
