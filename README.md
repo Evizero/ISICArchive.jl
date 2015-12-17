@@ -1,6 +1,6 @@
 # ISICArchive.jl
 
-Julia package to access the API of the [ISIC Archive](https://isic-archive.com/).
+Julia package to interact with the [ISIC Archive](https://isic-archive.com/) [REST API]((https://isic-archive.com/api/v1)).
 
 [![Build Status](https://travis-ci.org/Evizero/ISICArchive.jl.svg?branch=master)](https://travis-ci.org/Evizero/ISICArchive.jl)
 
