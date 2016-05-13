@@ -1,5 +1,8 @@
 # ISICArchive.jl
 
+[![Project Status: Inactive - The project has reached a stable, usable state but is no longer being actively developed; support/maintenance will be provided as time allows.](http://www.repostatus.org/badges/latest/inactive.svg)](http://www.repostatus.org/#inactive)
+[![License](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE.md)
+
 [Julia](http://julialang.org/) package to interact with the [ISIC Archive](https://isic-archive.com/) [REST API]((https://isic-archive.com/api/v1)).
 
 [![Build Status](https://travis-ci.org/Evizero/ISICArchive.jl.svg?branch=master)](https://travis-ci.org/Evizero/ISICArchive.jl)
