@@ -30,7 +30,6 @@ end
 # ==========================================================================
 
 type DatasetMetadata
-    accessLevel::Int
     id::ASCIIString
     modelType::ASCIIString
     created::DateTime
@@ -42,7 +41,6 @@ end
 
 function DatasetMetadata(o::Dict)
     DatasetMetadata(
-        o["_accessLevel"],
         o["_id"],
         o["_modelType"],
         parse_datetime(o["created"]),
@@ -54,7 +52,6 @@ end
 
 function JSON.json(o::DatasetMetadata)
     dict = Dict{AbstractString, Any}()
-    dict["_accessLevel"] = o.accessLevel
     dict["_id"] = o.id
     dict["_modelType"] = o.modelType
     dict["created"] = tostring(o.created)

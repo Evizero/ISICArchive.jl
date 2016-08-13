@@ -113,7 +113,7 @@ ImageDownloadRequest(le::Union{ListEntry,ImageMetadata}) = ImageDownloadRequest(
 
 function Base.get(req::ImageDownloadRequest)
     query = "https://isic-archive.com:443/api/v1/image/$(req.id)/download"
-    ImageMagick.readblob(readbytes(get(query)))
+    ImageMagick.readblob(get(query).data)
 end
 
 # ==========================================================================
@@ -126,5 +126,5 @@ ImageThumbnailRequest(le::Union{ListEntry,ImageMetadata}) = ImageThumbnailReques
 
 function Base.get(req::ImageThumbnailRequest)
     query = "https://isic-archive.com:443/api/v1/image/$(req.id)/thumbnail"
-    ImageMagick.readblob(readbytes(get(query)))
+    ImageMagick.readblob(get(query).data)
 end
