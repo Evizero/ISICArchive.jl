@@ -3,7 +3,7 @@
     (offset::Int = 0, offset >= 0),
     sort::Symbol = :lowerName,
     (sortdir::Int = 1, sortdir == 1 || sortdir == -1),
-    datasetId::ASCIIString
+    datasetId::String
 )
 
 ImageListRequest(ds::Union{ListEntry,DatasetMetadata}; kw...) = ImageListRequest(datasetId = ds.id; kw...)
@@ -16,15 +16,15 @@ end
 # ==========================================================================
 
 type ImageMetadata
-    id::ASCIIString
-    modelType::ASCIIString
+    id::String
+    modelType::String
     created::DateTime
-    creatorId::ASCIIString
-    description::UTF8String
-    name::ASCIIString
+    #creatorId::String
+    description::String
+    name::String
     updated::DateTime
     class::Symbol
-    meta::Dict{AbstractString,Any}
+    meta::Dict{String,Any}
 end
 
 function ImageMetadata(o::Dict)
@@ -32,7 +32,7 @@ function ImageMetadata(o::Dict)
         o["_id"],
         o["_modelType"],
         parse_datetime(o["created"]),
-        o["creatorId"],
+        #o["creatorId"],
         o["description"],
         o["name"],
         parse_datetime(o["updated"]),
@@ -41,11 +41,11 @@ function ImageMetadata(o::Dict)
 end
 
 function JSON.json(o::ImageMetadata)
-    dict = Dict{AbstractString, Any}()
+    dict = Dict{String, Any}()
     dict["_id"] = o.id
     dict["_modelType"] = o.modelType
     dict["created"] = tostring(o.created)
-    dict["creatorId"] = o.creatorId
+    #dict["creatorId"] = o.creatorId
     dict["description"] = o.description
     dict["name"] = o.name
     dict["updated"] = tostring(o.updated)
@@ -66,9 +66,9 @@ function extract_class(o::Dict)
     if haskey(o, "clinical")
         c = o["clinical"]
         if haskey(c, "benign_malignant")
-            return symbol(c["benign_malignant"])
+            return Symbol(c["benign_malignant"])
         elseif haskey(c, "ben_mal")
-            return symbol(c["ben_mal"])
+            return Symbol(c["ben_mal"])
         end
     end
     :none
@@ -80,7 +80,7 @@ function Base.show(io::IO, o::ImageMetadata)
     print_with_color(:blue, io, o.name, "\n")
     println(io, "  .id: ", o.id)
     println(io, "  .modelType: ", o.modelType)
-    println(io, "  .creatorId: ", o.creatorId)
+    #println(io, "  .creatorId: ", o.creatorId)
     println(io, "  .created: ", o.created)
     println(io, "  .updated: ", o.updated)
     println(io, "  .class: ", o.class)
@@ -93,7 +93,7 @@ end
 # ==========================================================================
 
 @defstruct ImageMetadataRequest (
-    id::ASCIIString
+    id::String
 )
 
 ImageMetadataRequest(le::Union{ListEntry,ImageMetadata}) = ImageMetadataRequest(id = le.id)
@@ -106,7 +106,7 @@ end
 # ==========================================================================
 
 @defstruct ImageDownloadRequest (
-    id::ASCIIString
+    id::String
 )
 
 ImageDownloadRequest(le::Union{ListEntry,ImageMetadata}) = ImageDownloadRequest(id = le.id)
@@ -119,7 +119,7 @@ end
 # ==========================================================================
 
 @defstruct ImageThumbnailRequest (
-    id::ASCIIString
+    id::String
 )
 
 ImageThumbnailRequest(le::Union{ListEntry,ImageMetadata}) = ImageThumbnailRequest(id = le.id)

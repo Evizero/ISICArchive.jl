@@ -1,6 +1,6 @@
 type ListEntry
-    id::ASCIIString
-    name::ASCIIString
+    id::String
+    name::String
     updated::DateTime
 end
 
@@ -30,12 +30,12 @@ end
 # ==========================================================================
 
 type DatasetMetadata
-    id::ASCIIString
-    modelType::ASCIIString
+    id::String
+    modelType::String
     created::DateTime
-    creatorId::ASCIIString
-    description::UTF8String
-    name::ASCIIString
+    #creatorId::String
+    description::String
+    name::String
     updated::DateTime
 end
 
@@ -44,18 +44,18 @@ function DatasetMetadata(o::Dict)
         o["_id"],
         o["_modelType"],
         parse_datetime(o["created"]),
-        o["creatorId"],
+        #o["creator"]["_id"],
         o["description"],
         o["name"],
         parse_datetime(o["updated"]))
 end
 
 function JSON.json(o::DatasetMetadata)
-    dict = Dict{AbstractString, Any}()
+    dict = Dict{String, Any}()
     dict["_id"] = o.id
     dict["_modelType"] = o.modelType
     dict["created"] = tostring(o.created)
-    dict["creatorId"] = o.creatorId
+    #dict["creatorId"] = o.creatorId
     dict["description"] = o.description
     dict["name"] = o.name
     dict["updated"] = tostring(o.updated)
@@ -77,7 +77,7 @@ function Base.show(io::IO, o::DatasetMetadata)
     print_with_color(:blue, io, o.name, "\n")
     println(io, "  .id: ", o.id)
     println(io, "  .modelType: ", o.modelType)
-    println(io, "  .creatorId: ", o.creatorId)
+    #println(io, "  .creatorId: ", o.creatorId)
     println(io, "  .created: ", o.created)
     println(io, "  .updated: ", o.updated)
     println(io, "")
@@ -87,7 +87,7 @@ end
 # ==========================================================================
 
 @defstruct DatasetMetadataRequest (
-    id::ASCIIString
+    id::String
 )
 
 DatasetMetadataRequest(le::ListEntry) = DatasetMetadataRequest(id = le.id)
