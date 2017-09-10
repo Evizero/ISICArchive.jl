@@ -1,10 +1,10 @@
-@defstruct ImageListRequest (
-    (limit::Int = 50, limit > 0),
-    (offset::Int = 0, offset >= 0),
-    sort::Symbol = :lowerName,
-    (sortdir::Int = 1, sortdir == 1 || sortdir == -1),
+@with_kw struct ImageListRequest
+    limit::Int = 50; @assert limit > 0
+    offset::Int = 0; @assert offset >= 0
+    sort::Symbol = :lowerName
+    sortdir::Int = 1; @assert sortdir == 1 || sortdir == -1
     datasetId::String
-)
+end
 
 ImageListRequest(ds::Union{ListEntry,DatasetMetadata}; kw...) = ImageListRequest(datasetId = ds.id; kw...)
 
@@ -13,14 +13,14 @@ function Base.get(req::ImageListRequest)
     [ListEntry(o) for o in clean_json(get(query))]
 end
 
-# ==========================================================================
+# ====================================================================
 
-type ImageMetadata
+mutable struct ImageMetadata
     id::String
     modelType::String
     created::DateTime
     #creatorId::String
-    description::String
+    #description::String
     name::String
     updated::DateTime
     class::Symbol
@@ -33,7 +33,7 @@ function ImageMetadata(o::Dict)
         o["_modelType"],
         parse_datetime(o["created"]),
         #o["creatorId"],
-        o["description"],
+        #o["description"],
         o["name"],
         parse_datetime(o["updated"]),
         extract_class(o["meta"]),
@@ -46,7 +46,7 @@ function JSON.json(o::ImageMetadata)
     dict["_modelType"] = o.modelType
     dict["created"] = tostring(o.created)
     #dict["creatorId"] = o.creatorId
-    dict["description"] = o.description
+    #dict["description"] = o.description
     dict["name"] = o.name
     dict["updated"] = tostring(o.updated)
     dict["meta"] = o.meta
@@ -84,17 +84,17 @@ function Base.show(io::IO, o::ImageMetadata)
     println(io, "  .created: ", o.created)
     println(io, "  .updated: ", o.updated)
     println(io, "  .class: ", o.class)
-    println(io, "  .description: ", o.description)
+    #println(io, "  .description: ", o.description)
     println(io, "")
     print(io,   "  .meta: parsed JSON as ")
     Base.showdict(io, o.meta)
 end
 
-# ==========================================================================
+# ====================================================================
 
-@defstruct ImageMetadataRequest (
+@with_kw struct ImageMetadataRequest
     id::String
-)
+end
 
 ImageMetadataRequest(le::Union{ListEntry,ImageMetadata}) = ImageMetadataRequest(id = le.id)
 
@@ -103,11 +103,11 @@ function Base.get(req::ImageMetadataRequest)
     ImageMetadata(clean_json(get(query)))
 end
 
-# ==========================================================================
+# ====================================================================
 
-@defstruct ImageDownloadRequest (
+@with_kw struct ImageDownloadRequest
     id::String
-)
+end
 
 ImageDownloadRequest(le::Union{ListEntry,ImageMetadata}) = ImageDownloadRequest(id = le.id)
 
@@ -116,11 +116,11 @@ function Base.get(req::ImageDownloadRequest)
     ImageMagick.readblob(get(query).data)
 end
 
-# ==========================================================================
+# ====================================================================
 
-@defstruct ImageThumbnailRequest (
+@with_kw struct ImageThumbnailRequest
     id::String
-)
+end
 
 ImageThumbnailRequest(le::Union{ListEntry,ImageMetadata}) = ImageThumbnailRequest(id = le.id)
 

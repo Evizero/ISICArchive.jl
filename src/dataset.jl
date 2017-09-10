@@ -1,4 +1,4 @@
-type ListEntry
+mutable struct ListEntry
     id::String
     name::String
     updated::DateTime
@@ -13,23 +13,23 @@ function Base.show(io::IO, o::ListEntry)
     print(io, ": id = $(o.id), updated = $(o.updated)")
 end
 
-# ==========================================================================
+# ====================================================================
 
-@defstruct DatasetListRequest (
-    (limit::Int = 50, limit > 0),
-    (offset::Int = 0, offset >= 0),
-    sort::Symbol = :lowerName,
-    (sortdir::Int = 1, sortdir == 1 || sortdir == -1)
-)
+@with_kw struct DatasetListRequest
+    limit::Int = 50; @assert limit > 0
+    offset::Int = 0; @assert offset >= 0
+    sort::Symbol = :lowerName
+    sortdir::Int = 1; @assert sortdir == 1 || sortdir == -1
+end
 
 function Base.get(req::DatasetListRequest)
     query = "https://isic-archive.com:443/api/v1/dataset?limit=$(req.limit)&offset=$(req.offset)&sort=$(req.sort)&sortdir=$(req.sortdir)"
     [ListEntry(o) for o in clean_json(get(query))]
 end
 
-# ==========================================================================
+# ====================================================================
 
-type DatasetMetadata
+mutable struct DatasetMetadata
     id::String
     modelType::String
     created::DateTime
@@ -84,11 +84,11 @@ function Base.show(io::IO, o::DatasetMetadata)
     print(io, o.description)
 end
 
-# ==========================================================================
+# ====================================================================
 
-@defstruct DatasetMetadataRequest (
+@with_kw struct DatasetMetadataRequest
     id::String
-)
+end
 
 DatasetMetadataRequest(le::ListEntry) = DatasetMetadataRequest(id = le.id)
 

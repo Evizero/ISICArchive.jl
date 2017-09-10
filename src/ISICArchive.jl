@@ -2,7 +2,7 @@ module ISICArchive
 
 import Requests: get
 using JSON
-using SimpleStructs
+using Parameters
 using Images
 using ImageMagick
 
