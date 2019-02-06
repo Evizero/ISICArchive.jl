@@ -26,8 +26,8 @@ info2 = ISICArchive.DatasetMetadata(JSON.parse(json(info)))
 @test (info > info2) == false
 @test (info < info2) == false
 
-#image_list = get(ImageListRequest(datasetId = dataset_list[1], limit = 5))
-#@test length(image_list) == 5
+image_list = get(ImageListRequest(datasetId = dataset_list[1], limit = 5))
+@test length(image_list) == 5
 image_list = get(ImageListRequest(info, limit = 5))
 @test length(image_list) == 5
 image_list = get(ImageListRequest(dataset_list[1], limit = 5))
