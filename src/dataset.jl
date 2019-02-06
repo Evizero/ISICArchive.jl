@@ -80,7 +80,7 @@ end
 function Base.show(io::IO, o::DatasetMetadata)
     printstyled(io, string(typeof(o)), "\n", color=:white)
     print(io,   "  .name: ")
-    printstyled(io, o.name, "\n", :blue)
+    printstyled(io, o.name, "\n", color = :blue)
     println(io, "  .id: ", o.id)
     println(io, "  .modelType: ", o.modelType)
     #println(io, "  .creatorId: ", o.creatorId)
