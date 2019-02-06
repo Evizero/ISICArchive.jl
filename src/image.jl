@@ -75,7 +75,7 @@ function extract_class(o::Dict)
 end
 
 function Base.show(io::IO, o::ImageMetadata)
-    printstyled(io, string(typeof(o)), "\n", :white)
+    printstyled(io, string(typeof(o)), "\n", color = :white)
     print(io,   "  .name: ")
     printstyled(io, o.name, "\n", :blue)
     println(io, "  .id: ", o.id)
