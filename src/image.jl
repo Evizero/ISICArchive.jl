@@ -10,7 +10,7 @@ ImageListRequest(ds::Union{ListEntry,DatasetMetadata}; kw...) = ImageListRequest
 
 function Base.get(req::ImageListRequest)
     query = "https://isic-archive.com:443/api/v1/image?limit=$(req.limit)&offset=$(req.offset)&sort=$(req.sort)&sortdir=$(req.sortdir)&datasetId=$(req.datasetId)"
-    [ListEntry(o) for o in clean_json(HTTP.get(query))]
+    [ListEntry(o) for o in clean_json(get(query))]
 end
 
 # ====================================================================
@@ -100,7 +100,7 @@ ImageMetadataRequest(le::Union{ListEntry,ImageMetadata}) = ImageMetadataRequest(
 
 function Base.get(req::ImageMetadataRequest)
     query = "https://isic-archive.com:443/api/v1/image/$(req.id)"
-    ImageMetadata(clean_json(HTTP.get(query)))
+    ImageMetadata(clean_json(get(query)))
 end
 
 # ====================================================================
@@ -113,7 +113,7 @@ ImageDownloadRequest(le::Union{ListEntry,ImageMetadata}) = ImageDownloadRequest(
 
 function Base.get(req::ImageDownloadRequest)
     query = "https://isic-archive.com:443/api/v1/image/$(req.id)/download"
-    ImageMagick.readblob(HTTP.get(query).body)
+    ImageMagick.readblob(get(query).body)
 end
 
 # ====================================================================
@@ -126,5 +126,5 @@ ImageThumbnailRequest(le::Union{ListEntry,ImageMetadata}) = ImageThumbnailReques
 
 function Base.get(req::ImageThumbnailRequest)
     query = "https://isic-archive.com:443/api/v1/image/$(req.id)/thumbnail"
-    ImageMagick.readblob(HTTP.get(query).body)
+    ImageMagick.readblob(get(query).body)
 end

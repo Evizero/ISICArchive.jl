@@ -8,6 +8,8 @@ function ListEntry(o::Dict)
     ListEntry(o["_id"], o["name"], parse_datetime(o["updated"]))
 end
 
+convert(::Type{<:AbstractString}, ls::ListEntry) = ls.id
+
 function Base.show(io::IO, o::ListEntry)
     printstyled(io, o.name, color=:blue)
     print(io, ": id = $(o.id), updated = $(o.updated)")
@@ -24,7 +26,7 @@ end
 
 function Base.get(req::DatasetListRequest)
     query = "https://isic-archive.com:443/api/v1/dataset?limit=$(req.limit)&offset=$(req.offset)&sort=$(req.sort)&sortdir=$(req.sortdir)"
-    [ListEntry(o) for o in clean_json(HTTP.get(query))]
+    [ListEntry(o) for o in clean_json(get(query))]
 end
 
 # ====================================================================
@@ -94,5 +96,5 @@ DatasetMetadataRequest(le::ListEntry) = DatasetMetadataRequest(id = le.id)
 
 function Base.get(req::DatasetMetadataRequest)
     query = "https://isic-archive.com:443/api/v1/dataset/$(req.id)"
-    DatasetMetadata(clean_json(HTTP.get(query)))
+    DatasetMetadata(clean_json(get(query)))
 end

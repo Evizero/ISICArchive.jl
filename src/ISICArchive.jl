@@ -1,7 +1,9 @@
 module ISICArchive
 
-using HTTP
+import HTTP
 import HTTP: get
+import Base: convert
+
 using JSON
 using Parameters
 using Images
