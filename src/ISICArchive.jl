@@ -2,7 +2,7 @@ module ISICArchive
 
 import HTTP
 import HTTP: get
-import Base: convert
+import Base: convert, show
 
 using JSON
 using Parameters
@@ -11,7 +11,6 @@ using ImageMagick
 using Dates
 
 export
-
     DatasetListRequest,
     DatasetMetadataRequest,
 

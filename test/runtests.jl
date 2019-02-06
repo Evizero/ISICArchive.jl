@@ -8,7 +8,6 @@ using JSON
 dataset_list = get(DatasetListRequest(limit = 4))
 @test length(dataset_list) == 4
 
-#info = get(DatasetMetadataRequest(id = "5627f42b9fc3c132be08d84f"))
 info = get(DatasetMetadataRequest(dataset_list[1]))
 info2 = ISICArchive.DatasetMetadata(JSON.parse(json(info)))
 
