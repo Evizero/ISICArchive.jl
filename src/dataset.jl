@@ -9,7 +9,7 @@ function ListEntry(o::Dict)
 end
 
 function Base.show(io::IO, o::ListEntry)
-    print_with_color(:blue, io, o.name)
+    printstyled(io, o.name, color=:blue)
     print(io, ": id = $(o.id), updated = $(o.updated)")
 end
 
@@ -24,7 +24,7 @@ end
 
 function Base.get(req::DatasetListRequest)
     query = "https://isic-archive.com:443/api/v1/dataset?limit=$(req.limit)&offset=$(req.offset)&sort=$(req.sort)&sortdir=$(req.sortdir)"
-    [ListEntry(o) for o in clean_json(get(query))]
+    [ListEntry(o) for o in clean_json(HTTP.get(query))]
 end
 
 # ====================================================================
@@ -72,9 +72,9 @@ for op = (:<, :>, :(==), :(!=), :(<=), :(>=))
 end
 
 function Base.show(io::IO, o::DatasetMetadata)
-    print_with_color(:white, io, string(typeof(o)), "\n")
+    printstyled(io, string(typeof(o)), "\n", color=:white)
     print(io,   "  .name: ")
-    print_with_color(:blue, io, o.name, "\n")
+    printstyled(io, o.name, "\n", :blue)
     println(io, "  .id: ", o.id)
     println(io, "  .modelType: ", o.modelType)
     #println(io, "  .creatorId: ", o.creatorId)
@@ -94,5 +94,5 @@ DatasetMetadataRequest(le::ListEntry) = DatasetMetadataRequest(id = le.id)
 
 function Base.get(req::DatasetMetadataRequest)
     query = "https://isic-archive.com:443/api/v1/dataset/$(req.id)"
-    DatasetMetadata(clean_json(get(query)))
+    DatasetMetadata(clean_json(HTTP.get(query)))
 end

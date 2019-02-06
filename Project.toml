@@ -1,0 +1,17 @@
+name = "ISICArchive"
+uuid = "0f918735-7648-5aeb-9b51-2c108d137345"
+
+[deps]
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
+HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
+ImageMagick = "6218d12a-5da1-5696-b52f-db25d2ecc6d1"
+Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]

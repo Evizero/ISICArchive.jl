@@ -1,10 +1,12 @@
 module ISICArchive
 
-import Requests: get
+using HTTP
+import HTTP: get
 using JSON
 using Parameters
 using Images
 using ImageMagick
+using Dates
 
 export
 
