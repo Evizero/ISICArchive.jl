@@ -1,5 +1,5 @@
 using ISICArchive
-using Base.Test
+using Test
 using JSON
 
 # Basic tests that see if calls suceed.
@@ -8,7 +8,6 @@ using JSON
 dataset_list = get(DatasetListRequest(limit = 4))
 @test length(dataset_list) == 4
 
-info = get(DatasetMetadataRequest(id = "5627f42b9fc3c132be08d84f"))
 info = get(DatasetMetadataRequest(dataset_list[1]))
 info2 = ISICArchive.DatasetMetadata(JSON.parse(json(info)))
 
@@ -26,7 +25,7 @@ info2 = ISICArchive.DatasetMetadata(JSON.parse(json(info)))
 @test (info > info2) == false
 @test (info < info2) == false
 
-image_list = get(ImageListRequest(datasetId = "5627f42b9fc3c132be08d84f", limit = 5))
+image_list = get(ImageListRequest(datasetId = dataset_list[1], limit = 5))
 @test length(image_list) == 5
 image_list = get(ImageListRequest(info, limit = 5))
 @test length(image_list) == 5

@@ -8,14 +8,16 @@ function ListEntry(o::Dict)
     ListEntry(o["_id"], o["name"], parse_datetime(o["updated"]))
 end
 
-function Base.show(io::IO, o::ListEntry)
-    print_with_color(:blue, io, o.name)
+convert(::Type{<:AbstractString}, ls::ListEntry) = ls.id
+
+function show(io::IO, o::ListEntry)
+    printstyled(io, o.name, color=:blue)
     print(io, ": id = $(o.id), updated = $(o.updated)")
 end
 
 # ====================================================================
 
-@with_kw struct DatasetListRequest
+@with_kw_noshow struct DatasetListRequest
     limit::Int = 50; @assert limit > 0
     offset::Int = 0; @assert offset >= 0
     sort::Symbol = :lowerName
@@ -23,9 +25,13 @@ end
 end
 
 function Base.get(req::DatasetListRequest)
-    query = "https://isic-archive.com:443/api/v1/dataset?limit=$(req.limit)&offset=$(req.offset)&sort=$(req.sort)&sortdir=$(req.sortdir)"
+    query = "https://isic-archive.com/api/v1/dataset?limit=$(req.limit)&offset=$(req.offset)&sort=$(req.sort)&sortdir=$(req.sortdir)"
     [ListEntry(o) for o in clean_json(get(query))]
 end
+
+show(io::IO, req::DatasetListRequest) =
+    print(io, "$(typeof(req))\nlimit:   $(req.limit)\noffset:  $(req.offset)\nsort:    $(req.sort)\nsortdir: $(req.sortdir)\n")
+
 
 # ====================================================================
 
@@ -72,9 +78,9 @@ for op = (:<, :>, :(==), :(!=), :(<=), :(>=))
 end
 
 function Base.show(io::IO, o::DatasetMetadata)
-    print_with_color(:white, io, string(typeof(o)), "\n")
+    printstyled(io, string(typeof(o)), "\n", color=:white)
     print(io,   "  .name: ")
-    print_with_color(:blue, io, o.name, "\n")
+    printstyled(io, o.name, "\n", color = :blue)
     println(io, "  .id: ", o.id)
     println(io, "  .modelType: ", o.modelType)
     #println(io, "  .creatorId: ", o.creatorId)
@@ -86,13 +92,15 @@ end
 
 # ====================================================================
 
-@with_kw struct DatasetMetadataRequest
+@with_kw_noshow struct DatasetMetadataRequest
     id::String
 end
 
 DatasetMetadataRequest(le::ListEntry) = DatasetMetadataRequest(id = le.id)
 
 function Base.get(req::DatasetMetadataRequest)
-    query = "https://isic-archive.com:443/api/v1/dataset/$(req.id)"
+    query = "https://isic-archive.com/api/v1/dataset/$(req.id)"
     DatasetMetadata(clean_json(get(query)))
 end
+
+show(io::IO, req::DatasetMetadataRequest) = print(io, "$(typeof(req))\nid:    $(req.id)")

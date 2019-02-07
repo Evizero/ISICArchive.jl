@@ -1,4 +1,4 @@
-@with_kw struct ImageListRequest
+@with_kw_noshow struct ImageListRequest
     limit::Int = 50; @assert limit > 0
     offset::Int = 0; @assert offset >= 0
     sort::Symbol = :lowerName
@@ -9,9 +9,12 @@ end
 ImageListRequest(ds::Union{ListEntry,DatasetMetadata}; kw...) = ImageListRequest(datasetId = ds.id; kw...)
 
 function Base.get(req::ImageListRequest)
-    query = "https://isic-archive.com:443/api/v1/image?limit=$(req.limit)&offset=$(req.offset)&sort=$(req.sort)&sortdir=$(req.sortdir)&datasetId=$(req.datasetId)"
+    query = "https://isic-archive.com/api/v1/image?limit=$(req.limit)&offset=$(req.offset)&sort=$(req.sort)&sortdir=$(req.sortdir)&datasetId=$(req.datasetId)"
     [ListEntry(o) for o in clean_json(get(query))]
 end
+
+show(io::IO, req::ImageListRequest) =
+    print(io, "$(typeof(req))\nlimit:    $(req.limit)\noffset:   $(req.offset)\nsort:     $(req.sort)\nsortdir:  $(req.sortdir)\ndatasetId: $(req.datasetId)\n")
 
 # ====================================================================
 
@@ -75,9 +78,9 @@ function extract_class(o::Dict)
 end
 
 function Base.show(io::IO, o::ImageMetadata)
-    print_with_color(:white, io, string(typeof(o)), "\n")
+    printstyled(io, string(typeof(o)), "\n", color = :white)
     print(io,   "  .name: ")
-    print_with_color(:blue, io, o.name, "\n")
+    printstyled(io, o.name, "\n", color = :blue)
     println(io, "  .id: ", o.id)
     println(io, "  .modelType: ", o.modelType)
     #println(io, "  .creatorId: ", o.creatorId)
@@ -87,44 +90,50 @@ function Base.show(io::IO, o::ImageMetadata)
     #println(io, "  .description: ", o.description)
     println(io, "")
     print(io,   "  .meta: parsed JSON as ")
-    Base.showdict(io, o.meta)
+    show(io, o.meta)
 end
 
 # ====================================================================
 
-@with_kw struct ImageMetadataRequest
+@with_kw_noshow struct ImageMetadataRequest
     id::String
 end
 
 ImageMetadataRequest(le::Union{ListEntry,ImageMetadata}) = ImageMetadataRequest(id = le.id)
 
 function Base.get(req::ImageMetadataRequest)
-    query = "https://isic-archive.com:443/api/v1/image/$(req.id)"
+    query = "https://isic-archive.com/api/v1/image/$(req.id)"
     ImageMetadata(clean_json(get(query)))
 end
 
+show(io::IO, req::ImageMetadataRequest) = print(io, "$(typeof(req))\nid:    $(req.id)")
+
+
 # ====================================================================
 
-@with_kw struct ImageDownloadRequest
+@with_kw_noshow struct ImageDownloadRequest
     id::String
 end
 
 ImageDownloadRequest(le::Union{ListEntry,ImageMetadata}) = ImageDownloadRequest(id = le.id)
 
 function Base.get(req::ImageDownloadRequest)
-    query = "https://isic-archive.com:443/api/v1/image/$(req.id)/download"
-    ImageMagick.readblob(get(query).data)
+    query = "https://isic-archive.com/api/v1/image/$(req.id)/download"
+    ImageMagick.readblob(get(query).body)
 end
 
+show(io::IO, req::ImageDownloadRequest) = print(io, "$(typeof(req))\nid:    $(req.id)")
 # ====================================================================
 
-@with_kw struct ImageThumbnailRequest
+@with_kw_noshow struct ImageThumbnailRequest
     id::String
 end
 
 ImageThumbnailRequest(le::Union{ListEntry,ImageMetadata}) = ImageThumbnailRequest(id = le.id)
 
 function Base.get(req::ImageThumbnailRequest)
-    query = "https://isic-archive.com:443/api/v1/image/$(req.id)/thumbnail"
-    ImageMagick.readblob(get(query).data)
+    query = "https://isic-archive.com/api/v1/image/$(req.id)/thumbnail"
+    ImageMagick.readblob(get(query).body)
 end
+
+show(io::IO, req::ImageThumbnailRequest) = print(io, "$(typeof(req))\nid:    $(req.id)")

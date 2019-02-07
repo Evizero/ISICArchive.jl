@@ -1,13 +1,16 @@
 module ISICArchive
 
-import Requests: get
+import HTTP
+import HTTP: get
+import Base: convert, show
+
 using JSON
 using Parameters
 using Images
 using ImageMagick
+using Dates
 
 export
-
     DatasetListRequest,
     DatasetMetadataRequest,
 

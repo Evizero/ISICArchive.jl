@@ -1,6 +1,6 @@
-julia 0.6
-Requests
+julia 1.0
+HTTP
+ImageMagick
+Images
 JSON
 Parameters
-Images
-ImageMagick
